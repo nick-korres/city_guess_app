@@ -1,0 +1,24 @@
+.correct {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(20, 220, 70);
+    height: 50px;
+    width: 80px;
+
+    /* border: rgb(42, 216, 36);
+    border-style: solid; */
+}
+
+.false {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(220, 20, 20);
+    height: 50px;
+    width: 80px;
+
+    /* border: rgb(42, 216, 36);
+    border-style: solid; */
+}
+

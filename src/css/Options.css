@@ -1,0 +1,34 @@
+.option {
+
+}
+
+.optionLabel{
+    background-image: -moz-linear-gradient(rgb(111, 197, 255),rgb(207, 232, 243),rgb(111, 197, 255));
+    padding-top: 5px;
+    padding-right: 30px;
+    border-radius: 30px;
+    border-style: solid;
+    border-color: rgb(32, 51, 218);
+}
+
+.optionLabelGreyed{
+    background-image: -moz-linear-gradient(rgb(135, 140, 143),rgb(169, 174, 177),rgb(135, 140, 143));
+    padding-top: 5px;
+    padding-right: 30px;
+    border-radius: 30px;
+    border-style: solid;
+    border-color: rgb(32, 51, 218);
+}
+
+input[type="radio"]{
+    margin: 0 35px 0 0;
+  }
+@media screen and (max-width: 1200px) {
+    input[type="radio"]{
+        margin: 0 0 0 0;
+    }
+    .optionLabel {
+        margin:0;
+        padding:0;
+    }
+}

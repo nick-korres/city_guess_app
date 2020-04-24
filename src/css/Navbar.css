@@ -1,0 +1,22 @@
+
+.navbar {
+  position: fixed;
+  z-index: 1;
+  width: 100%;
+  background: rgb(210, 221, 177);
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 1rem 2rem;
+  border-style: solid;
+}
+.nav-button {
+    background-color: transparent;
+    color: rgb(207, 167, 34);
+    transform: scale(2,2);
+}
+
+.nav-header {
+    display: flex;
+    justify-content: space-between;
+  }
