@@ -8,7 +8,7 @@ class CityProvider extends Component {
         this.state = { 
             currCities:[],
             cities:[],
-            api_url: 'https://city-guess-api.herokuapp.com/'
+            api_url: 'http://127.0.0.1:5000/'//'https://city-guess-api.herokuapp.com/'
         };
     }
     //  fetch('http://127.0.0.1:5000/').then( res => res.json()).then( data => {this.setState({currCities: data})
@@ -19,8 +19,6 @@ class CityProvider extends Component {
 
     loadCities =  async () => {
         const response = await fetch(this.state.api_url+'images/').then(resp => resp.json())
-        // console.log('inside load cities');
-        // console.log(response[1].name);
         this.setState({
             currCities: response,
             cities: response

@@ -5,7 +5,6 @@ import Options from "./Options";
 import OnSubmitMessage from "./OnSubmitMessage";
 import placeholder from "../assets/loading.png"
 
-
 class Home extends React.Component {
     constructor(props){
     super(props);
@@ -22,8 +21,6 @@ class Home extends React.Component {
     };
     
     loadCities(currCities) {
-
-            console.log('mphka')
             let numChoices=4;
             let cityChoices=[];
             let newCities=[...currCities];
@@ -35,8 +32,6 @@ class Home extends React.Component {
             const { changeCurrCities } = this.context;
             changeCurrCities(newCities,numChoices);
             let cityDiplayed=Math.floor(Math.random()*cityChoices.length);
-            console.log('inside loadcities')
-            console.log(cityChoices[cityDiplayed])
             this.setState({
                 userSubmited: false,
                 correctOption: cityChoices[cityDiplayed],
@@ -46,18 +41,13 @@ class Home extends React.Component {
     };
 
     handleChange = changeEvent => {
-        // const { currCities } = this.context;
-        // console.log("remaining cities: ",currCities.length);
         this.setState({
           selectedOption: changeEvent.target.value
         });
     };
 
     handleFormSubmit = formSubmitEvent => {
-        // console.log(formSubmitEvent.target); 
         formSubmitEvent.preventDefault();
-        // console.log("You have submitted: ", this.state.selectedOption);
-        // console.log("Correct option: ",this.state.correctOption.name)
         if (this.state.selectedOption === this.state.correctOption.name) {
             this.setState({
                 userSubmited: true,
@@ -75,34 +65,28 @@ class Home extends React.Component {
         this.setState({
             cityDiplayed: {id: 0,name: 'placeholder',url: placeholder}
         })
-        console.log('kati '+ this.context);
         const { getCities } = this.context;
         await getCities();
         const { currCities } = this.context;
-        this.setState({finishedLoading: true})
-        console.log('inside Home.js')
-        console.log(currCities)
-        this.loadCities(currCities)
+        this.setState({finishedLoading: true});
+        this.loadCities(currCities);
     };
 
-
-    
     render() {
         const { currCities, api_url } = this.context;
+        const { cityDiplayed, cityChoices, selectedOption, userSubmited, correct } = this.state;
         return ( 
             <div className="home-body">
-                <img src={api_url+this.state.cityDiplayed.url} alt={this.state.cityDiplayed.name} className="image" />
-                {console.log('in image')}
-                {console.log(this.state.cityDiplayed.url+'  '+api_url)}
+                <img src={api_url+cityDiplayed.url} alt={cityDiplayed.name} className="image" />
                 <form className="form" onSubmit={this.handleFormSubmit} >
                     <section>
-                    {this.state.cityChoices.map( 
+                    {cityChoices.map( 
                         city => <Options 
                                     name={city.name} 
-                                    givenOption={this.state.selectedOption} 
+                                    givenOption={selectedOption} 
                                     change={this.handleChange} 
                                     key={city.id}
-                                    disabled={this.state.userSubmited}
+                                    disabled={userSubmited}
                                 />
                         ) 
                     }
@@ -110,16 +94,16 @@ class Home extends React.Component {
                     <input type="submit" papia="papia" value="submit"/>
                     <button 
                     type="button" 
-                    disabled={!this.state.userSubmited} 
-                    className={this.state.userSubmited ? "normal" : "greyed"} 
+                    disabled={!userSubmited} 
+                    className={userSubmited ? "normal" : "greyed"} 
                     onClick={() => this.loadCities(currCities)}
                     >
                     Next
                     </button>
                 </form>
                 <div className="result">
-                    { this.state.userSubmited 
-                        ? <OnSubmitMessage correct={this.state.correct}/> 
+                    { userSubmited 
+                        ? <OnSubmitMessage correct={correct}/> 
                         : <div>Choose a City</div>
                     }
                 </div>
