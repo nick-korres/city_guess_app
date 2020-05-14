@@ -1,26 +1,23 @@
-import React,{Component} from 'react';
+import React,{useEffect, useState, useContext, useRef} from 'react';
 import "../css/Home.css";
 import { CityContext }  from "../context";
 import Options from "./Options";
 import OnSubmitMessage from "./OnSubmitMessage";
 import placeholder from "../assets/loading.png"
 
-class Home extends React.Component {
-    constructor(props){
-    super(props);
-    this.state = { 
-        correctOption: [],
-        selectedOption: "",
-        userSubmited: false,
-        correct: false,
-        cityDiplayed: [],
-        cityChoices: [],
-        finishedLoading: false
-     };
-  
-    };
+function Home(props) {
+
+    const cityContext = useContext(CityContext);
+    const {getCities, currCities, api_url,changeCurrCities,} = cityContext;
+    const [selectedOption,setSelectedOption] = useState('');
+    const [userSubmited,setUserSubmited] = useState(false);
+    const [correct,setCorrect] = useState(false);
+    const [finishedLoading,setFinishedLoading] = useState(false);
+    const [correctOption,setCorrectOption] = useState([]);
+    const [cityDisplayed,setCityDisplayed] = useState({id: 0,name: 'placeholder',url: placeholder});
+    const [cityChoices,setCityChoices] = useState([]);
     
-    loadCities(currCities) {
+    const selectCities = (currCities) => {
             let numChoices=4;
             let cityChoices=[];
             let newCities=[...currCities];
@@ -29,89 +26,82 @@ class Home extends React.Component {
                 cityChoices.push(newCities[randIndex]);
                 newCities.splice(randIndex,1);
             }
-            const { changeCurrCities } = this.context;
             changeCurrCities(newCities,numChoices);
-            let cityDiplayed=Math.floor(Math.random()*cityChoices.length);
-            this.setState({
-                userSubmited: false,
-                correctOption: cityChoices[cityDiplayed],
-                cityDiplayed: cityChoices[cityDiplayed],
-                cityChoices: cityChoices
+            let cityDisplayed=Math.floor(Math.random()*cityChoices.length);
+            setUserSubmited(false);
+            setCorrectOption(cityChoices[cityDisplayed]);
+            setCityDisplayed({
+                id: cityChoices[cityDisplayed].id, 
+                name: cityChoices[cityDisplayed].name , 
+                url: api_url+cityChoices[cityDisplayed].url
             });
+            setCityChoices(cityChoices);
+            setFinishedLoading(true);
     };
 
-    handleChange = changeEvent => {
-        this.setState({
-          selectedOption: changeEvent.target.value
-        });
+    const handleChange = changeEvent => {
+        setSelectedOption(changeEvent.target.value)
     };
 
-    handleFormSubmit = formSubmitEvent => {
+    const handleFormSubmit = formSubmitEvent => {
         formSubmitEvent.preventDefault();
-        if (this.state.selectedOption === this.state.correctOption.name) {
-            this.setState({
-                userSubmited: true,
-                correct: true
-              });  
+        if (selectedOption === correctOption.name) {
+            setUserSubmited(true)
+            setCorrect(true) 
         } else {
-            this.setState({
-                userSubmited: true,
-                correct: false
-              }); 
+            setUserSubmited(true)
+            setCorrect(false)
         }
     };
-    
-    async componentDidMount() {
-        this.setState({
-            cityDiplayed: {id: 0,name: 'placeholder',url: placeholder}
-        })
-        const { getCities } = this.context;
-        await getCities();
-        const { currCities } = this.context;
-        this.setState({finishedLoading: true});
-        this.loadCities(currCities);
-    };
 
-    render() {
-        const { currCities, api_url } = this.context;
-        const { cityDiplayed, cityChoices, selectedOption, userSubmited, correct } = this.state;
-        return ( 
-            <div className="home-body">
-                <img src={api_url+cityDiplayed.url} alt={cityDiplayed.name} className="image" />
-                <form className="form" onSubmit={this.handleFormSubmit} >
-                    <section>
-                    {cityChoices.map( 
-                        city => <Options 
-                                    name={city.name} 
-                                    givenOption={selectedOption} 
-                                    change={this.handleChange} 
-                                    key={city.id}
-                                    disabled={userSubmited}
-                                />
-                        ) 
-                    }
-                    </section>  
-                    <input type="submit" papia="papia" value="submit"/>
-                    <button 
-                    type="button" 
-                    disabled={!userSubmited} 
-                    className={userSubmited ? "normal" : "greyed"} 
-                    onClick={() => this.loadCities(currCities)}
-                    >
-                    Next
-                    </button>
-                </form>
-                <div className="result">
-                    { userSubmited 
-                        ? <OnSubmitMessage correct={correct}/> 
-                        : <div>Choose a City</div>
-                    }
-                </div>
-                <div className="test"> papia </div>
-            </div>
-         );
+    useEffect(() => {
+    if (typeof currCities[0] != 'undefined' && finishedLoading === false){
+        selectCities(currCities)
     }
-}
-Home.contextType = CityContext;
+    },[currCities])
+
+    useEffect(() => {
+        async function fetch(){
+            const response = await getCities();
+        }
+        fetch();
+    },[])
+
+    return ( 
+        <div className="home-body">
+            <img src={cityDisplayed.url} alt={cityDisplayed.name} className="image" />
+            <form className="form" onSubmit={handleFormSubmit} >
+                <section>
+                {cityChoices.map( 
+                    city => <Options 
+                                name={city.name} 
+                                givenOption={selectedOption} 
+                                change={handleChange} 
+                                key={city.id}
+                                disabled={userSubmited}
+                            />
+                    ) 
+                }
+                </section>  
+                <input type="submit" papia="papia" value="submit"/>
+                <button 
+                type="button" 
+                disabled={!userSubmited} 
+                className={userSubmited ? "normal" : "greyed"} 
+                onClick={() => selectCities(currCities)}
+                >
+                Next
+                </button>
+            </form>
+            <div className="result">
+                { userSubmited 
+                    ? <OnSubmitMessage correct={correct}/> 
+                    : <div>Choose a City</div>
+                }
+            </div>
+            <div className="test"> papia </div>
+        </div>
+    );
+};
 
 export default Home;

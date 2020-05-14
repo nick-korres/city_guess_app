@@ -9,22 +9,6 @@ const OnSubmitMessage = ({correct}) => {
         : (
         <div className="false">false</div>
         )
-        // <>
-        //     <div> 
-        //     { correct && (
-        //         <div>
-        //             Correct!
-        //         </div>
-        //     )}
-        //     </div>
-        //     <div>
-        //     { !correct && (
-        //         <div>
-        //             False!
-        //         </div>
-        //     )}
-        //     </div>
-        // </>
      );
 }
  

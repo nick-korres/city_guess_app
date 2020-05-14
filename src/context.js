@@ -11,22 +11,21 @@ class CityProvider extends Component {
             api_url: 'http://127.0.0.1:5000/'//'https://city-guess-api.herokuapp.com/'
         };
     }
-    //  fetch('http://127.0.0.1:5000/').then( res => res.json()).then( data => {this.setState({currCities: data})
      
-    // componentDidMount(){
-    //     this.loadCities();
-    // };
-
     loadCities =  async () => {
-        const response = await fetch(this.state.api_url+'images/').then(resp => resp.json())
+        const response = await fetch(this.state.api_url+'images/')
+                               .then((resp) => {    // Server errors
+                                if (resp.status >= 400 && resp.status < 600) {
+                                    throw new Error("Bad response from server "+resp.status);
+                                  }
+                                  return resp;
+                               })
+                               .then(resp => resp.json())
+                               .catch((error) => console.log(error)) // Network errors
         this.setState({
             currCities: response,
             cities: response
         });
-    }
-
-    showThem = () => {
-        console.log(this.state.currCities);
     }
 
     changeCurrCities = (newCities,numChoices) => {
@@ -52,8 +51,6 @@ class CityProvider extends Component {
           );
     }
 }
- 
-
 
 const CityConsumer = CityContext.Consumer;
 
