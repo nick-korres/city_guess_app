@@ -61,7 +61,7 @@ function Home(props) {
         }
         fetch();
     },[])
-
+    console.log(process.env.API_URL)
     return ( 
         <div className="home-body">
             {/* <div></div> */}
