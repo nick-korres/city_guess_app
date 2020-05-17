@@ -1,4 +1,4 @@
-import React,{useEffect, useState, useContext, useRef} from 'react';
+import React,{useEffect, useState, useContext} from 'react';
 import "../css/Home.css";
 import { CityContext }  from "../context";
 import Options from "./Options";
@@ -41,15 +41,10 @@ function Home(props) {
 
     const handleChange = changeEvent => {
         setSelectedOption(changeEvent.target.value)
-    };
-
-    const handleFormSubmit = formSubmitEvent => {
-        formSubmitEvent.preventDefault();
+        setUserSubmited(true);
         if (selectedOption === correctOption.name) {
-            setUserSubmited(true)
             setCorrect(true) 
         } else {
-            setUserSubmited(true)
             setCorrect(false)
         }
     };
@@ -69,37 +64,38 @@ function Home(props) {
 
     return ( 
         <div className="home-body">
-            <img src={cityDisplayed.url} alt={cityDisplayed.name} className="image" />
-            <form className="form" onSubmit={handleFormSubmit} >
-                <section>
-                {cityChoices.map( 
-                    city => <Options 
-                                name={city.name} 
-                                givenOption={selectedOption} 
-                                change={handleChange} 
-                                key={city.id}
-                                disabled={userSubmited}
-                            />
-                    ) 
-                }
-                </section>  
-                <input type="submit" papia="papia" value="submit"/>
-                <button 
-                type="button" 
-                disabled={!userSubmited} 
-                className={userSubmited ? "normal" : "greyed"} 
-                onClick={() => selectCities(currCities)}
-                >
-                Next
-                </button>
-            </form>
-            <div className="result">
+            {/* <div></div> */}
+            <div className="image-box">
+                <img src={cityDisplayed.url} alt={cityDisplayed.name} className="image" />
+            </div>
+            {/* <div></div> */}
+            <div className="options-box">
+            {cityChoices.map( 
+                city => <Options 
+                            name={city.name} 
+                            givenOption={selectedOption} 
+                            change={handleChange} 
+                            key={city.id}
+                            disabled={userSubmited}
+                            correctOption={correctOption.name}
+                        />
+                ) 
+            }
+            </div>  
+            <button 
+            type="button" 
+            disabled={!userSubmited} 
+            className={`next-button ${userSubmited ? "normal" : "greyed"}`} 
+            onClick={() => selectCities(currCities)}
+            >
+            Next
+            </button>
+            {/* <div className="result">
                 { userSubmited 
                     ? <OnSubmitMessage correct={correct}/> 
                     : <div>Choose a City</div>
                 }
-            </div>
-            <div className="test"> papia </div>
+            </div> */}
         </div>
     );
 };

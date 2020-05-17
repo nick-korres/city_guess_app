@@ -1,21 +1,32 @@
 import React from 'react';
 import "../css/Options.css";
 
-const Options = ({name,givenOption,change,disabled}) => {
+const Options = ({name,givenOption,change,disabled,correctOption}) => {
+   
+    let color = "normal";
+    if (disabled){
+        if(name===correctOption){
+            color = "green";
+        }
+        else if(givenOption === name){
+            color = "red";
+        }
+        else{
+            color = "greyed";
+        }
+    }
     return ( 
-        <section className="option">
-            <label className={disabled ? "optionLabelGreyed" :"optionLabel"}>
-                    <input 
-                        type="radio" 
+        <div className="button-container">
+                    <button  className={`option ${color}`}
+                        type="button" 
                         name={name}
                         value={name}
-                        checked={givenOption === name}
-                        onChange={change}
+                        onClick={change}
                         disabled={disabled}                   
-                    />
+                    >
                     {name}
-            </label>
-        </section>
+                    </button>
+         </div> 
         )
 };
  
