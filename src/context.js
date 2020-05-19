@@ -6,14 +6,19 @@ class CityProvider extends Component {
     constructor(){
         super()  
         this.state = { 
+            progPerc: 0,
             currCities:[],
             cities:[],
-            api_url:  'https://city-guess-api.herokuapp.com/' //'http://127.0.0.1:5000/'
+            api_url: 'http://127.0.0.1:5000/'  //'https://city-guess-api.herokuapp.com/'
         };
     }
+
+    updateProg = (newPerc) => {
+        this.setState({progPerc: newPerc})
+    }
      
-    loadCities =  async () => {
-        const response = await fetch(this.state.api_url+'images/')
+    loadCities =  async (numOfCities) => {
+        const response = await fetch(this.state.api_url+'images/'+numOfCities)
                                .then((resp) => {    // Server errors
                                 if (resp.status >= 400 && resp.status < 600) {
                                     throw new Error("Bad response from server "+resp.status);
@@ -43,7 +48,8 @@ class CityProvider extends Component {
                 value={{...this.state,
                     changeCurrCities: this.changeCurrCities,
                     getCities: this.loadCities,
-                    showThem: this.showThem
+                    showThem: this.showThem,
+                    updateProg: this.updateProg
                 }}
             >
                 {this.props.children}
