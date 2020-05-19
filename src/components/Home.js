@@ -46,7 +46,7 @@ function Home(props) {
             setNumAnswered(numAnswered+1);
             if(correct) {setNumOfCorrect(numOfCorrect+1)} ;
             updateProg(numAnswered/numOfCities);
-            setTimeCounter(2);
+            setTimeCounter(10);
     };
 
     const handleChange = (changeEvent) => {
