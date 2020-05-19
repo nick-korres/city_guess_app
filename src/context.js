@@ -9,7 +9,7 @@ class CityProvider extends Component {
             progPerc: 0,
             currCities:[],
             cities:[],
-            api_url: 'http://127.0.0.1:5000/'  //'https://city-guess-api.herokuapp.com/'
+            api_url:  'https://city-guess-api.herokuapp.com/' //'http://127.0.0.1:5000/' 
         };
     }
 
