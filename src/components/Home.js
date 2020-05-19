@@ -11,7 +11,7 @@ function Home(props) {
     const cityContext = useContext(CityContext);
     const {getCities, currCities, api_url,changeCurrCities,updateProg} = cityContext;
     const [score,setScore] = useState(0);
-    const [timeCounter, setTimeCounter] = useState(2);
+    const [timeCounter, setTimeCounter] = useState(10);
     const [numOfCorrect , setNumOfCorrect] = useState(0);
     const [numAnswered, setNumAnswered] = useState(0);
     const [numOfCities, setNumOfCities] = useState(10);
