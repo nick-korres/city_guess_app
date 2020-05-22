@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --env.API_URL=papia --mode development --open --hot",
-    "build": "webpack --mode production "
+    "start": "webpack-dev-server --env.API_URL=http://127.0.0.1:5000/ --mode development --open --hot",
+    "build": "webpack --env.API_URL=https://city-guess-api.herokuapp.com/ --mode production "
   },
   "keywords": [],
   "author": "",

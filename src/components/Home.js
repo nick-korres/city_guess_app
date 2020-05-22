@@ -9,7 +9,7 @@ import placeholder from "../assets/loading.png"
 function Home(props) {
 
     const cityContext = useContext(CityContext);
-    const {getCities, currCities, api_url,changeCurrCities,updateProg} = cityContext;
+    const {getCities, currCities, api_url,changeCurrCities,progPerc,updateProg,started,toggleStart} = cityContext;
     const [score,setScore] = useState(0);
     const [timeCounter, setTimeCounter] = useState(10);
     const [numOfCorrect , setNumOfCorrect] = useState(0);
@@ -20,26 +20,30 @@ function Home(props) {
     const [correct,setCorrect] = useState(false);
     const [finishedLoading,setFinishedLoading] = useState(false);
     const [correctOption,setCorrectOption] = useState([]);
-    const [cityDisplayed,setCityDisplayed] = useState({id: 0,name: 'placeholder',url: placeholder});
+    const [cityDisplayedIndex,setCityDisplayedIndex] = useState({id: 0,name: 'placeholder',url: placeholder});
     const [cityChoices,setCityChoices] = useState([]);
     
     const selectCities = (currCities) => {
+            console.log("All Cities: ");
+            currCities.map((city)=>console.log(city.name));
             let numChoices=4;
             let cityChoices=[];
-            let newCities=[...currCities];
+            let tempCities=[...currCities];
             for(let i=1;i<=numChoices;i++){
-                let randIndex=Math.floor(Math.random()*newCities.length);
-                cityChoices.push(newCities[randIndex]);
-                newCities.splice(randIndex,1);
+                let randIndex=Math.floor(Math.random()*tempCities.length);
+                cityChoices.push(tempCities[randIndex]);
+                tempCities.splice(randIndex,1);
+                console.log("City Choices: ");
+                cityChoices.map((city)=>console.log(city.name));
             }
-            changeCurrCities(newCities,numChoices);
-            let cityDisplayed=Math.floor(Math.random()*cityChoices.length);
+            changeCurrCities(tempCities,numChoices);
+            let cityDisplayedIndex=Math.floor(Math.random()*cityChoices.length);
             setUserSubmited(false);
-            setCorrectOption(cityChoices[cityDisplayed]);
-            setCityDisplayed({
-                id: cityChoices[cityDisplayed].id, 
-                name: cityChoices[cityDisplayed].name , 
-                url: api_url+cityChoices[cityDisplayed].url
+            setCorrectOption(cityChoices[cityDisplayedIndex]);
+            setCityDisplayedIndex({
+                id: cityChoices[cityDisplayedIndex].id, 
+                name: cityChoices[cityDisplayedIndex].name , 
+                url: api_url+cityChoices[cityDisplayedIndex].url
             });
             setCityChoices(cityChoices);
             setFinishedLoading(true);
@@ -47,6 +51,7 @@ function Home(props) {
             if(correct) {setNumOfCorrect(numOfCorrect+1)} ;
             updateProg(numAnswered/numOfCities);
             setTimeCounter(10);
+            if ((numAnswered===numOfCities) && started) { toggleStart() } ;
     };
 
     const handleChange = (changeEvent) => {
@@ -57,23 +62,22 @@ function Home(props) {
             setScore(score+timeCounter)
         } else {
             setCorrect(false);
-        }
-        
+        }  
     };
 
     useEffect(() => {
-        if(!userSubmited){
+        if(!userSubmited && started){
             if (timeCounter > 0){
                 setTimeout(() => setTimeCounter(timeCounter - 1), 1000)
+            }
+            if (timeCounter===0 && !userSubmited) {
+                setUserSubmited(true);
+                setSelectedOption(correctOption);
+                setCorrect(false);
+                // selectCities(currCities);
+            }
         }
-        if (timeCounter===0 && !userSubmited) {
-            setUserSubmited(true);
-            setSelectedOption(correctOption);
-            setCorrect(false);
-            // selectCities(currCities);
-        }
-        }
-    }, [timeCounter]);
+    }, [timeCounter,started]);
     
     useEffect(() => {
     if (typeof currCities[0] != 'undefined' && finishedLoading === false){
@@ -87,37 +91,38 @@ function Home(props) {
         }
         fetch();
     },[])
+
     return ( 
         <div className="home-body">
             <div className="countdown">Timer: {timeCounter}</div>
             <div className="image-box">
-                <img src={cityDisplayed.url} alt={cityDisplayed.name} className="image" />
+                <img src={cityDisplayedIndex.url} alt={cityDisplayedIndex.name} className="image" />
             </div>
-            <div className="Score"><Score numTotalCities={numOfCities} 
-                                          numAnswered={numAnswered} 
-                                          numOfCorrect={numOfCorrect}
-                                          Score={score} 
-            /></div>
+            <Score numTotalCities={numOfCities} 
+                    numAnswered={numAnswered} 
+                    numOfCorrect={numOfCorrect}
+                    Score={score}
+            />
             <div className="options-box">
-            {cityChoices.map( 
-                city => <Options 
-                            name={city.name} 
-                            givenOption={selectedOption} 
-                            change={handleChange} 
-                            key={city.id}
-                            disabled={userSubmited}
-                            correctOption={correctOption.name}
-                        />
-                ) 
-            }
+                {cityChoices.map( 
+                    city => <Options 
+                                name={city.name} 
+                                givenOption={selectedOption} 
+                                change={handleChange} 
+                                key={city.id}
+                                disabled={userSubmited}
+                                correctOption={correctOption.name}
+                            />
+                    ) 
+                }
             </div>  
             <button 
-            type="button" 
-            disabled={!userSubmited} 
-            className={`next-button ${userSubmited ? "normal" : "greyed"}`} 
-            onClick={() => selectCities(currCities)}
+                type="button" 
+                disabled={!userSubmited} 
+                className={`next-button ${userSubmited ? "normal" : "greyed"}`} 
+                onClick={() => selectCities(currCities)}
             >
-            Next
+                {(numAnswered===numOfCities)?"Results":"Next"} 
             </button>
             {/* <div className="result">
                 { userSubmited 

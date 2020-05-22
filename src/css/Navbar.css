@@ -67,20 +67,23 @@
 }
 .over-button {
   /* display: inline-block; */
+  font-size: 2rem;
   width: 10%;
   border-radius: 50px;
   background-color: aquamarine;
   text-align: center;
   align-self: center;
   margin-top: 30px;
-  transition:  1.2s;
+  transition:  1.5s;
 }
 .over-button.hide{
-  margin-top: -50px;
-  top: -80px;
+  margin-top: -100%;
+  top: -100%;
 }
 
 .overlay-text{
+  font-size: 2rem;
+  color: #ffffff;
   order: -1;
   position: relative;
   text-align: center;
@@ -88,8 +91,8 @@
   transition:  1.2s;
 }
 .overlay-text.hide{
-  margin-top: 0px;
-  top: -50px;
+  margin-top: -100%;
+  top: -100%;
 }
 
 /* .nav-header {

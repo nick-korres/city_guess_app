@@ -1,9 +1,10 @@
-import React from 'react';
+import React  from 'react';
 import './css/App.css';
 import Home from "./components/Home"
 import Navbar from "./components/Navbar";
 import Main from  "./components/Main";
 import Error from "./components/Error";
+
 
 import { Switch, Route } from "react-router-dom";
 

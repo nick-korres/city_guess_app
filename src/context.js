@@ -5,16 +5,20 @@ const CityContext = React.createContext();
 class CityProvider extends Component {
     constructor(){
         super()  
-        this.state = { 
+        this.state = {
+            started: false,
             progPerc: 0,
             currCities:[],
             cities:[],
-            api_url:   'https://city-guess-api.herokuapp.com/' // 'http://127.0.0.1:5000/' 
+            api_url: process.env.API_URL // 'http://127.0.0.1:5000/' // 'https://city-guess-api.herokuapp.com/' 
         };
     }
 
     updateProg = (newPerc) => {
-        this.setState({progPerc: newPerc})
+        this.setState({progPerc: newPerc});
+    }
+    toggleStart = (status) => {
+        this.setState({started: !this.state.started});
     }
      
     loadCities =  async (numOfCities) => {
@@ -41,7 +45,7 @@ class CityProvider extends Component {
         }
     };
   
-
+   
     render() { 
         return (  
             <CityContext.Provider 
@@ -49,7 +53,8 @@ class CityProvider extends Component {
                     changeCurrCities: this.changeCurrCities,
                     getCities: this.loadCities,
                     showThem: this.showThem,
-                    updateProg: this.updateProg
+                    updateProg: this.updateProg,
+                    toggleStart: this.toggleStart
                 }}
             >
                 {this.props.children}
