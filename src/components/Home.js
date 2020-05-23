@@ -7,11 +7,14 @@ import Score from "./Score"
 import placeholder from "../assets/loading.png"
 
 function Home(props) {
+    const Timer = 10;
+    const numChoices=4;
 
     const cityContext = useContext(CityContext);
-    const {getCities, currCities, api_url,changeCurrCities,progPerc,updateProg,started,toggleStart} = cityContext;
+    const {getCities,choiceCities, dispCities, api_url,changedispCities,progPerc,updateProg,started,toggleStart} = cityContext;
+    // choiceCities ==> pool of choices ,cityChoices ==> current group of 4 choices
     const [score,setScore] = useState(0);
-    const [timeCounter, setTimeCounter] = useState(10);
+    const [timeCounter, setTimeCounter] = useState(Timer);
     const [numOfCorrect , setNumOfCorrect] = useState(0);
     const [numAnswered, setNumAnswered] = useState(0);
     const [numOfCities, setNumOfCities] = useState(10);
@@ -20,37 +23,27 @@ function Home(props) {
     const [correct,setCorrect] = useState(false);
     const [finishedLoading,setFinishedLoading] = useState(false);
     const [correctOption,setCorrectOption] = useState([]);
-    const [cityDisplayedIndex,setCityDisplayedIndex] = useState({id: 0,name: 'placeholder',url: placeholder});
+    const [cityDisplayed,setCityDisplayed] = useState({id: 0,name: 'placeholder',url: placeholder});
     const [cityChoices,setCityChoices] = useState([]);
     
-    const selectCities = (currCities) => {
-            console.log("All Cities: ");
-            currCities.map((city)=>console.log(city.name));
-            let numChoices=4;
-            let cityChoices=[];
-            let tempCities=[...currCities];
-            for(let i=1;i<=numChoices;i++){
-                let randIndex=Math.floor(Math.random()*tempCities.length);
-                cityChoices.push(tempCities[randIndex]);
-                tempCities.splice(randIndex,1);
-                console.log("City Choices: ");
-                cityChoices.map((city)=>console.log(city.name));
-            }
-            changeCurrCities(tempCities,numChoices);
-            let cityDisplayedIndex=Math.floor(Math.random()*cityChoices.length);
-            setUserSubmited(false);
-            setCorrectOption(cityChoices[cityDisplayedIndex]);
-            setCityDisplayedIndex({
-                id: cityChoices[cityDisplayedIndex].id, 
-                name: cityChoices[cityDisplayedIndex].name , 
-                url: api_url+cityChoices[cityDisplayedIndex].url
-            });
+    const selectCities = (dispCities) => {
+            let cityDisplayedIndex=Math.floor(Math.random()*dispCities.length);
+            let chosenCity = dispCities.splice(cityDisplayedIndex,1); //pick a random one
+            chosenCity = chosenCity[0]  // extract it
+            let cityChoices = choiceCities.splice(0,3) // pick 3 random from different pool of choices
+            const randIndex = Math.floor(Math.random()*numChoices);
+            cityChoices.splice(randIndex,0,chosenCity)  // put displayed at random index out of the numChoices
+
+            changedispCities(dispCities);
+            setCityDisplayed(chosenCity)
+            setCorrectOption(chosenCity);
             setCityChoices(cityChoices);
             setFinishedLoading(true);
             setNumAnswered(numAnswered+1);
             if(correct) {setNumOfCorrect(numOfCorrect+1)} ;
             updateProg(numAnswered/numOfCities);
-            setTimeCounter(10);
+            setTimeCounter(Timer);
+            setUserSubmited(false);
             if ((numAnswered===numOfCities) && started) { toggleStart() } ;
     };
 
@@ -74,29 +67,31 @@ function Home(props) {
                 setUserSubmited(true);
                 setSelectedOption(correctOption);
                 setCorrect(false);
-                // selectCities(currCities);
+                // selectCities(dispCities);
             }
         }
     }, [timeCounter,started]);
     
     useEffect(() => {
-    if (typeof currCities[0] != 'undefined' && finishedLoading === false){
-        selectCities(currCities)
+    if (typeof dispCities[0] != 'undefined' && finishedLoading === false){
+        selectCities(dispCities)
     }
-    },[currCities])
+    },[dispCities])
 
     useEffect(() => {
         async function fetch(){
-            const response = await getCities(numOfCities);
+            const response = await getCities(numOfCities,numChoices);
         }
         fetch();
     },[])
 
+
     return ( 
         <div className="home-body">
             <div className="countdown">Timer: {timeCounter}</div>
+            {console.log(cityDisplayed.url)}
             <div className="image-box">
-                <img src={cityDisplayedIndex.url} alt={cityDisplayedIndex.name} className="image" />
+                <img src={api_url+cityDisplayed.url} alt={cityDisplayed.name} className="image" />
             </div>
             <Score numTotalCities={numOfCities} 
                     numAnswered={numAnswered} 
@@ -120,7 +115,7 @@ function Home(props) {
                 type="button" 
                 disabled={!userSubmited} 
                 className={`next-button ${userSubmited ? "normal" : "greyed"}`} 
-                onClick={() => selectCities(currCities)}
+                onClick={() => selectCities(dispCities)}
             >
                 {(numAnswered===numOfCities)?"Results":"Next"} 
             </button>

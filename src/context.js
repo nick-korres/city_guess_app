@@ -8,8 +8,8 @@ class CityProvider extends Component {
         this.state = {
             started: false,
             progPerc: 0,
-            currCities:[],
-            cities:[],
+            dispCities:[],
+            choiceCities:[],
             api_url: process.env.API_URL // 'http://127.0.0.1:5000/' // 'https://city-guess-api.herokuapp.com/' 
         };
     }
@@ -17,12 +17,12 @@ class CityProvider extends Component {
     updateProg = (newPerc) => {
         this.setState({progPerc: newPerc});
     }
-    toggleStart = (status) => {
+    toggleStart = () => {
         this.setState({started: !this.state.started});
     }
      
-    loadCities =  async (numOfCities) => {
-        const response = await fetch(this.state.api_url+'images/'+numOfCities)
+    loadCities =  async (numOfCities,multiplier) => {
+        const response = await fetch(this.state.api_url+'images/'+numOfCities*multiplier)
                                .then((resp) => {    // Server errors
                                 if (resp.status >= 400 && resp.status < 600) {
                                     throw new Error("Bad response from server "+resp.status);
@@ -31,26 +31,22 @@ class CityProvider extends Component {
                                })
                                .then(resp => resp.json())
                                .catch((error) => console.log(error)) // Network errors
+
+
         this.setState({
-            currCities: response,
-            cities: response
-        });
+            dispCities: response.slice(0,numOfCities),
+            choiceCities: response.slice(numOfCities)
+        });     
     }
 
-    changeCurrCities = (newCities,numChoices) => {
-        if (newCities.length >= numChoices){
-            this.setState({currCities:newCities});      
-        } else {
-            this.setState({currCities: this.state.cities}); 
-        }
-    };
+    changedispCities = (newCities) => { this.setState({dispCities:newCities})};      
   
    
     render() { 
         return (  
             <CityContext.Provider 
                 value={{...this.state,
-                    changeCurrCities: this.changeCurrCities,
+                    changedispCities: this.changedispCities,
                     getCities: this.loadCities,
                     showThem: this.showThem,
                     updateProg: this.updateProg,
