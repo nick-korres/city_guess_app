@@ -39,14 +39,14 @@ class CityProvider extends Component {
         });     
     }
 
-    changedispCities = (newCities) => { this.setState({dispCities:newCities})};      
+    changeDispCities = (newCities) => { if (newCities.length>0) this.setState({dispCities:newCities})};      
   
    
     render() { 
         return (  
             <CityContext.Provider 
                 value={{...this.state,
-                    changedispCities: this.changedispCities,
+                    changeDispCities: this.changeDispCities,
                     getCities: this.loadCities,
                     showThem: this.showThem,
                     updateProg: this.updateProg,

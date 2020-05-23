@@ -6,12 +6,16 @@ import Score from "./Score"
 // import OnSubmitMessage from "./OnSubmitMessage";
 import placeholder from "../assets/loading.png"
 
+let lastRound =[];
+let lastCity;
+
 function Home(props) {
     const Timer = 10;
-    const numChoices=4;
+    const numChoices =4;
+
 
     const cityContext = useContext(CityContext);
-    const {getCities,choiceCities, dispCities, api_url,changedispCities,progPerc,updateProg,started,toggleStart} = cityContext;
+    const {getCities,choiceCities, dispCities, api_url,changeDispCities,progPerc,updateProg,started,toggleStart} = cityContext;
     // choiceCities ==> pool of choices ,cityChoices ==> current group of 4 choices
     const [score,setScore] = useState(0);
     const [timeCounter, setTimeCounter] = useState(Timer);
@@ -33,8 +37,18 @@ function Home(props) {
             let cityChoices = choiceCities.splice(0,3) // pick 3 random from different pool of choices
             const randIndex = Math.floor(Math.random()*numChoices);
             cityChoices.splice(randIndex,0,chosenCity)  // put displayed at random index out of the numChoices
-
-            changedispCities(dispCities);
+            if (numAnswered===numOfCities-1){
+                lastRound = cityChoices;
+                lastCity = cityChoices[0];
+                console.log(lastCity)
+            }
+            if ((numAnswered===numOfCities) && started) { 
+                cityChoices = lastRound;
+                chosenCity = lastCity;
+                console.log(lastCity)
+                toggleStart() 
+            } ;
+            changeDispCities(dispCities);
             setCityDisplayed(chosenCity)
             setCorrectOption(chosenCity);
             setCityChoices(cityChoices);
@@ -86,10 +100,10 @@ function Home(props) {
     },[])
 
 
-    return ( 
+    return (
         <div className="home-body">
+            {console.log("Rendered")}
             <div className="countdown">Timer: {timeCounter}</div>
-            {console.log(cityDisplayed.url)}
             <div className="image-box">
                 <img src={api_url+cityDisplayed.url} alt={cityDisplayed.name} className="image" />
             </div>
