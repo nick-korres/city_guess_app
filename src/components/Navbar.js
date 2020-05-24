@@ -7,7 +7,7 @@ import { CityContext }  from "../context";
 
 const Navbar = () => {
     const cityContext = useContext(CityContext);
-    const {progPerc,started,toggleStart} = cityContext;
+    const {progPerc,started,toggleStart,finalScore} = cityContext;
     const [overVis, setOverVis] = useState(!started);
     let show = overVis ? 'show' : 'hide';
     const toggleOver = () => {
@@ -23,7 +23,10 @@ const Navbar = () => {
                 {(progPerc===1)
                  ?<div className={`overlay ${show}`}>
                      <div className={`overlay-text ${show}`}>
-                         <p>kati</p>
+                        <h2>Results</h2>
+                        <br></br>
+                        <p>Your final score is : {finalScore.score}</p>
+                        <p>You got {finalScore.correctAns}/{finalScore.totalAns} correct</p>
                     </div>
                   </div>
                  :  <div className={`overlay ${show}`}>
@@ -35,12 +38,12 @@ const Navbar = () => {
                  </div>
                 }    
                 <ProgressBar percentage={progPerc}/>
-                {/* <div className="nav-header"> */}
+                {/* <div className="nav-header">
                 <Link to="/">
                     <FaHome className="nav-button"/>
                 </Link>                
                 <button type="button" className="button" onClick={toggleOver} >Papia</button>
-                {/* </div> */}
+                </div> */}
             </nav>
         </>
      );

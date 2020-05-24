@@ -15,7 +15,7 @@ function Home(props) {
 
 
     const cityContext = useContext(CityContext);
-    const {getCities,choiceCities, dispCities, api_url,changeDispCities,progPerc,updateProg,started,toggleStart} = cityContext;
+    const {getCities,choiceCities, dispCities, api_url,changeDispCities,progPerc,updateProg,started,toggleStart,setFinalScore} = cityContext;
     // choiceCities ==> pool of choices ,cityChoices ==> current group of 4 choices
     const [score,setScore] = useState(0);
     const [timeCounter, setTimeCounter] = useState(Timer);
@@ -40,12 +40,10 @@ function Home(props) {
             if (numAnswered===numOfCities-1){
                 lastRound = cityChoices;
                 lastCity = cityChoices[0];
-                console.log(lastCity)
             }
             if ((numAnswered===numOfCities) && started) { 
                 cityChoices = lastRound;
                 chosenCity = lastCity;
-                console.log(lastCity)
                 toggleStart() 
             } ;
             changeDispCities(dispCities);
@@ -58,7 +56,11 @@ function Home(props) {
             updateProg(numAnswered/numOfCities);
             setTimeCounter(Timer);
             setUserSubmited(false);
-            if ((numAnswered===numOfCities) && started) { toggleStart() } ;
+            if ((numAnswered===numOfCities) && started) {
+                setFinalScore(numOfCorrect,numOfCities,score);
+                // toggleStart(); 
+            } ;
+
     };
 
     const handleChange = (changeEvent) => {
@@ -102,7 +104,6 @@ function Home(props) {
 
     return (
         <div className="home-body">
-            {console.log("Rendered")}
             <div className="countdown">Timer: {timeCounter}</div>
             <div className="image-box">
                 <img src={api_url+cityDisplayed.url} alt={cityDisplayed.name} className="image" />

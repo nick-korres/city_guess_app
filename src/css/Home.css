@@ -49,17 +49,7 @@
     grid-row: 1 ;
     grid-column: 2  ; 
 }
-@media screen and (max-width: 1200px) {
-    .home-body{
-        display: flex;
-        flex-direction: column;
-    }
-    .image-box {
-        width: 100vw;
-        height: 50vh;
-    }
 
-  }
 .image{
     box-shadow: 0px -40px 100px rgba(0, 0, 0, 0.582);
     width: 100%;
@@ -82,12 +72,7 @@
     justify-content: space-around;
 }
 
-@media screen and (max-width: 500px) {
-    .image-box{
-        width: 100vw;
-        height: 50vh;
-    }
-}
+
 
 .next-button{
     align-self: center;
@@ -110,5 +95,21 @@
     color: floralwhite;
 }
 
+@media screen and (max-width: 500px) {
+    .image-box{
+        width: 100vw;
+        height: 50vh;
+    }
+}
 
+@media screen and (max-width: 1200px) {
+    .home-body{
+        display: flex;
+        flex-direction: column;
+    }
+    .image-box {
+        width: 100vw;
+        height: 50vh;
+    }
 
+}

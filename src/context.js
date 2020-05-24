@@ -6,6 +6,7 @@ class CityProvider extends Component {
     constructor(){
         super()  
         this.state = {
+            finalScore: {correctAns: 0,totalAns: 0,score: 0},
             started: false,
             progPerc: 0,
             dispCities:[],
@@ -14,13 +15,14 @@ class CityProvider extends Component {
         };
     }
 
-    updateProg = (newPerc) => {
-        this.setState({progPerc: newPerc});
-    }
-    toggleStart = () => {
-        this.setState({started: !this.state.started});
-    }
-     
+    updateProg = (newPerc) => {this.setState({progPerc: newPerc}); }
+    toggleStart = () => {this.setState({started: !this.state.started});}
+    changeDispCities = (newCities) => { if (newCities.length>0) this.setState({dispCities:newCities})}; 
+    setFinalScore = (correctAns,totalAns,score) => {
+        this.setState({finalScore: {correctAns,totalAns,score}})
+        this.toggleStart()
+    }; 
+
     loadCities =  async (numOfCities,multiplier) => {
         const response = await fetch(this.state.api_url+'images/'+numOfCities*multiplier)
                                .then((resp) => {    // Server errors
@@ -39,9 +41,6 @@ class CityProvider extends Component {
         });     
     }
 
-    changeDispCities = (newCities) => { if (newCities.length>0) this.setState({dispCities:newCities})};      
-  
-   
     render() { 
         return (  
             <CityContext.Provider 
@@ -50,7 +49,8 @@ class CityProvider extends Component {
                     getCities: this.loadCities,
                     showThem: this.showThem,
                     updateProg: this.updateProg,
-                    toggleStart: this.toggleStart
+                    toggleStart: this.toggleStart,
+                    setFinalScore: this.setFinalScore
                 }}
             >
                 {this.props.children}
