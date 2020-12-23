@@ -40,20 +40,5 @@ You can visit [here](https://city-guess.netlify.app/)
   The front end is hosted on Netlify https://city-guess.netlify.app/
   and the backend on Heroku https://city-guess-api.herokuapp.com/
   
-  
-  ## Welcome to the Simple Alarm Server Example
-This page will load and show a code example. 
-
-
-<div id="code-element"></div>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script>
-      axios({
-      method: 'get',
-      url: 'https://raw.githubusercontent.com/iotify/nsim-examples/master/functional-testing/alarm-server.js'
-       })
-      .then(function (response) {
-         document.getElementById("code-element").innerHTML = response.data;
-      });
-</script>
+ 
 
