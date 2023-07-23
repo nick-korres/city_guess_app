@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --env.API_URL=http://127.0.0.1:5000/ --mode development --open --hot",
-    "build": "webpack --env.API_URL=https://city-guess-api.herokuapp.com/ --mode production ",
-    "start_2":  "webpack-dev-server --env.API_URL=https://city-guess-api.herokuapp.com/ --mode development --open --hot"
+    "start_local": "webpack-dev-server --env.API_URL=http://127.0.0.1:5000/ --mode development --open --hot",
+    "build": "webpack --env.API_URL=https://city-guess-api-nick-korres.vercel.app/ --mode production ",
+    "start":  "webpack-dev-server --env.API_URL=https://city-guess-api-nick-korres.vercel.app/ --mode development --open --hot"
   },
   "keywords": [],
   "author": "",

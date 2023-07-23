@@ -28,7 +28,8 @@ You can visit [here](https://city-guess.netlify.app/)
   npm run start
   ```
   to run the web app, in this case it assumes the api serving the images runs locally at http://127.0.0.1:5000/  .
-  This can be done using this repository [city_guess_api](https://github.com/nick-korres/city_guess_api.gi).
+  This can be done using this repository [city_guess_api](https://github.com/nick-korres/city_guess_api.git).
+  An env API_URL variable is used to set that api url.
   
   Otherwise use 
   ```
@@ -38,7 +39,7 @@ You can visit [here](https://city-guess.netlify.app/)
 
 # Notes
   The front end is hosted on Netlify https://city-guess.netlify.app/
-  and the backend on Heroku https://city-guess-api.herokuapp.com/
+  and the backend on Heroku [https://city-guess-api-nick-korres.vercel.app/](https://city-guess-api-nick-korres.vercel.app/)
   
  
 
